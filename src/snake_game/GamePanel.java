@@ -41,6 +41,8 @@ public class GamePanel extends JPanel implements ActionListener {
         newPotion();
         running = true;
         timer = new Timer(DELAY, this);
+        timer.start();
+
     }
 
     public void paintComponent(Graphics graphics) {
@@ -93,22 +95,15 @@ public class GamePanel extends JPanel implements ActionListener {
         switch (direction) {
             case 'U':
                 y[0] = y[0] - UNIT_SIZE;
-                System.out.println("up: " + y[0]);
                 break;
             case 'D':
                 y[0] = y[0] + UNIT_SIZE;
-                System.out.println("down: " + y[0]);
-
                 break;
             case 'R':
                 x[0] = x[0] + UNIT_SIZE;
-                System.out.println("right: " + x[0]);
-
                 break;
             case 'L':
                 x[0] = x[0] - UNIT_SIZE;
-                System.out.println("left: " + x[0]);
-
                 break;
         }
     }
@@ -178,47 +173,16 @@ public class GamePanel extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_RIGHT:
-                    System.out.println("right?");
                     direction = 'R';
-                    if (running) {
-                        move();
-                        checkApple();
-                        checkCollisions();
-                    }
-                    repaint();
                     break;
                 case KeyEvent.VK_LEFT:
-                    System.out.println("left?");
                     direction = 'L';
-
-                    if (running) {
-                        move();
-                        checkApple();
-                        checkCollisions();
-                    }
-                    repaint();
                     break;
                 case KeyEvent.VK_UP:
-                    System.out.println("Up?");
                     direction = 'U';
-
-                    if (running) {
-                        move();
-                        checkApple();
-                        checkCollisions();
-                    }
-                    repaint();
                     break;
                 case KeyEvent.VK_DOWN:
-                    System.out.println("Down?");
                     direction = 'D';
-
-                    if (running) {
-                        move();
-                        checkApple();
-                        checkCollisions();
-                    }
-                    repaint();
                     break;
             }
         }
