@@ -15,8 +15,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final int UNIT_SIZE = 30;
     private static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT)/UNIT_SIZE;
     private static final int DELAY = 70;
-    private final int[] x = new int[GAME_UNITS];
-    private final int[] y = new int[GAME_UNITS];
+    private int[] x = new int[GAME_UNITS];
+    private int[] y = new int[GAME_UNITS];
 
     private int snakeBodyParts = 3;
     int applesEaten;
@@ -24,12 +24,21 @@ public class GamePanel extends JPanel implements ActionListener {
     int potionY;
     char direction = 'R'; // default - right
 
-    boolean running = false;
-    Timer timer;
-    Random random;
+    private boolean running = false;
+    private Timer timer;
+    private Random random;
+    private JButton restart = new JButton("Restart");
+
+    {
+        restart.addActionListener(event -> {
+            reset();
+            startGame();
+        });
+    }
 
     public GamePanel() {
         random = new Random();
+
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
@@ -37,7 +46,18 @@ public class GamePanel extends JPanel implements ActionListener {
         this.startGame();
     }
 
+    public void reset() {
+        running = false;
+        direction = 'R';
+        x = new int[GAME_UNITS];
+        y = new int[GAME_UNITS];
+        applesEaten = 0;
+        snakeBodyParts = 3;
+        
+    }
+
     public void startGame() {
+        restart.setVisible(false);
         newPotion();
         running = true;
         timer = new Timer(DELAY, this);
@@ -160,6 +180,10 @@ public class GamePanel extends JPanel implements ActionListener {
         FontMetrics fontMetrics2 = getFontMetrics(graphics.getFont());
         graphics.drawString("Game Over",
                 (SCREEN_WIDTH - fontMetrics2.stringWidth("Game Over"))/2, SCREEN_WIDTH/2);
+
+        this.add(restart);
+        restart.setVisible(true);
+        restart.setBounds(250, 100, 100, 50);
     }
 
     @Override
