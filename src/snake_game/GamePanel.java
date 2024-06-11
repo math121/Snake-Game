@@ -120,21 +120,25 @@ public class GamePanel extends JPanel implements ActionListener {
         for (int i = snakeBodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
+                break;
             }
         }
 
         if (x[0] < 0){
-            running = false;
-        }
+            System.out.println("left " + x[0]);
+            x[0] = SCREEN_WIDTH;
 
-        if (x[0] > SCREEN_WIDTH){
-            running = false;
-        }
-        if (y[0] < 0){
-            running = false;
-        }
-        if (y[0] > SCREEN_HEIGHT){
-            running = false;
+        } else if (x[0] >= SCREEN_WIDTH){
+            System.out.println("right " + x[0]);
+            x[0] = 0;
+
+        } else if (y[0] < 0){
+            System.out.println("top border " + y[0]);
+            y[0] = SCREEN_HEIGHT;
+
+        } else if (y[0] >= SCREEN_HEIGHT) {
+            System.out.println("bottom border " + y[0]);
+            y[0] = 0;
         }
 
         if (!running) {
