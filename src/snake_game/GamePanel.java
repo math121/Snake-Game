@@ -27,23 +27,43 @@ public class GamePanel extends JPanel implements ActionListener {
     private boolean running = false;
     private Timer timer;
     private Random random;
-    private JButton restart = new JButton("Restart");
+    private JButton restartBtn = new JButton("Restart");
+    private JButton startBtn = new JButton("Start");
+    private JButton toMainScreen = new JButton("Return to main screen");
+
+    private boolean mainScreen = false;
 
     {
-        restart.addActionListener(event -> {
+        restartBtn.addActionListener(event -> {
             reset();
             startGame();
+        });
+
+        startBtn.addActionListener(event -> {
+            mainScreen = false;
+            startGame();
+        });
+
+        toMainScreen.addActionListener(event -> {
+            reset();
+            mainScreen = true;
+            restartBtn.setVisible(false);
+            toMainScreen.setVisible(false);
+            startBtn.setVisible(true);
+            this.startGame();
         });
     }
 
     public GamePanel() {
         random = new Random();
+        mainScreen = true;
 
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        this.add(startBtn);
         this.startGame();
+
     }
 
     public void reset() {
@@ -57,11 +77,19 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void startGame() {
-        restart.setVisible(false);
-        newPotion();
-        running = true;
-        timer = new Timer(DELAY, this);
-        timer.start();
+        if (mainScreen) {
+            this.setBackground(new Color(0x131368));
+        } else {
+            mainScreen = false;
+            startBtn.setVisible(false);
+            restartBtn.setVisible(false);
+            toMainScreen.setVisible(false);
+            newPotion();
+            running = true;
+            timer = new Timer(DELAY, this);
+            timer.start();
+        }
+
 
     }
 
@@ -71,7 +99,9 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics graphics) {
-        if (running) {
+        if (running && !mainScreen) {
+            this.setBackground(Color.BLACK);
+
             for (int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++) {
                 graphics.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
                 graphics.drawLine(0, i*UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
@@ -89,13 +119,13 @@ public class GamePanel extends JPanel implements ActionListener {
                 }
             }
 
-            /*graphics.setColor(Color.red);
-            graphics.setFont(new Font("Ink Free", Font.BOLD, 40));
+            graphics.setColor(Color.red);
+            graphics.setFont(new Font("Ink Free", Font.BOLD, 30));
             FontMetrics fontMetrics = getFontMetrics(graphics.getFont());
             graphics.drawString("Score: " + applesEaten,
                     (SCREEN_WIDTH - fontMetrics.stringWidth("Score: " + applesEaten))/2,
-                    graphics.getFont().getSize());*/
-        } else {
+                    graphics.getFont().getSize());
+        } else if (!mainScreen) {
             gameOver(graphics);
         }
 
@@ -181,9 +211,13 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.drawString("Game Over",
                 (SCREEN_WIDTH - fontMetrics2.stringWidth("Game Over"))/2, SCREEN_WIDTH/2);
 
-        this.add(restart);
-        restart.setVisible(true);
-        restart.setBounds(250, 100, 100, 50);
+        this.add(restartBtn);
+        this.add(toMainScreen);
+        restartBtn.setVisible(true);
+        toMainScreen.setVisible(true);
+        toMainScreen.setBounds(100, 400, 200, 50);
+        restartBtn.setBounds(350, 400, 100, 50);
+
     }
 
     @Override
